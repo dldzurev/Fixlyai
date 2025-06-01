@@ -79,13 +79,15 @@ export default function ChatPage() {
         })
       });
 
+      if (!response.ok) throw new Error("Network response was not ok");
       const data = await response.json();
-      const botReply = data.choices?.[0]?.message?.content || "";
-      const botMsg: ChatMessage = { role: "assistant", content: botReply };
+      const botReply = data.choices?.[0]?.message?.content;
+      const content = botReply || "not connected to API yet";
+      const botMsg: ChatMessage = { role: "assistant", content };
       setMessages(prev => [...prev, botMsg]);
     } catch (err) {
       console.error(err);
-      const errorMsg: ChatMessage = { role: "assistant", content: "Sorry, something went wrong." };
+      const errorMsg: ChatMessage = { role: "assistant", content: "not connected to API yet" };
       setMessages(prev => [...prev, errorMsg]);
     } finally {
       setIsLoading(false);
@@ -132,34 +134,34 @@ export default function ChatPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 to-white dark:from-gray-900 dark:to-gray-800 flex flex-col transition-colors duration-300">
       {/* Header */}
-      <header className="p-6 border-b border-gray-100 dark:border-gray-700">
-        <div className="flex items-center justify-between max-w-6xl mx-auto">
+      <header className="p-4 sm:p-6 border-b border-gray-100 dark:border-gray-700">
+        <div className="flex items-center justify-between max-w-3xl mx-auto">
           <Link
             href="/demo"
             className="inline-flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-orange-600 dark:hover:text-orange-400 transition-colors duration-300"
           >
             <ArrowLeft className="w-5 h-5" />
-            <span>Back to Demo</span>
+            <span className="text-sm sm:text-base">Back to Demo</span>
           </Link>
 
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-orange-400 to-orange-600 rounded-xl flex items-center justify-center">
-              <MessageCircle className="w-5 h-5 text-white" />
+          <div className="flex items-center gap-2 sm:gap-3">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-orange-400 to-orange-600 rounded-xl flex items-center justify-center">
+              <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
             </div>
-            <span className="font-semibold text-gray-900 dark:text-white">Chat Assistant</span>
+            <span className="text-sm sm:text-lg font-semibold text-gray-900 dark:text-white">Chat Assistant</span>
           </div>
 
-          <div className="ml-6">
+          <div className="ml-4">
             <ThemeToggle />
           </div>
         </div>
       </header>
 
       {/* Chat UI */}
-      <main className="flex-1 flex items-center justify-center px-6 py-12">
-        <div className="w-full max-w-3xl mx-auto bg-white dark:bg-gray-800 rounded-2xl shadow-lg shadow-gray-900/5 dark:shadow-gray-900/20 border border-gray-100 dark:border-gray-700 flex flex-col h-[500px]">
+      <main className="flex-1 flex items-center justify-center px-4 sm:px-6 py-8">
+        <div className="w-full max-w-lg sm:max-w-2xl mx-auto bg-white dark:bg-gray-800 rounded-2xl shadow-lg shadow-gray-900/5 dark:shadow-gray-900/20 border border-gray-100 dark:border-gray-700 flex flex-col h-[80vh] sm:h-[600px]">
           {/* Messages Area */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-4" style={{ minHeight: 0 }}>
+          <div className="flex-1 overflow-y-auto p-4 space-y-3 sm:space-y-4" style={{ minHeight: 0 }}>
             {messages.length ? (
               messages.map((msg, idx) => (
                 <div
@@ -167,7 +169,7 @@ export default function ChatPage() {
                   className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
                 >
                   <div
-                    className={`max-w-[80%] p-4 rounded-2xl shadow-md ${
+                    className={`w-auto max-w-[75%] sm:max-w-[70%] p-3 sm:p-4 rounded-2xl shadow-md $
                       msg.role === "user"
                         ? "bg-orange-500 text-white"
                         : "bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
@@ -175,24 +177,24 @@ export default function ChatPage() {
                   >
                     {msg.fileUrl ? (
                       msg.fileType === "image" ? (
-                        <img src={msg.fileUrl} alt="user upload" className="rounded-xl max-h-48" />
+                        <img src={msg.fileUrl} alt="user upload" className="rounded-xl max-h-40 sm:max-h-48 w-full object-cover" />
                       ) : msg.fileType === "video" ? (
-                        <video src={msg.fileUrl} controls className="rounded-xl max-h-48" />
+                        <video src={msg.fileUrl} controls className="rounded-xl max-h-40 sm:max-h-48 w-full" />
                       ) : msg.fileType === "audio" ? (
                         <audio src={msg.fileUrl} controls className="w-full" />
                       ) : (
-                        <a href={msg.fileUrl} className="underline" target="_blank" rel="noreferrer">
+                        <a href={msg.fileUrl} className="underline text-sm sm:text-base" target="_blank" rel="noreferrer">
                           Download File
                         </a>
                       )
                     ) : (
-                      <span>{msg.content}</span>
+                      <span className="text-sm sm:text-base">{msg.content}</span>
                     )}
                   </div>
                 </div>
               ))
             ) : (
-              <p className="text-center text-gray-500 dark:text-gray-400">Start the conversation...</p>
+              <p className="text-center text-gray-500 dark:text-gray-400 text-sm sm:text-base">Start the conversation...</p>
             )}
             <div ref={messagesEndRef} />
           </div>
@@ -200,24 +202,24 @@ export default function ChatPage() {
           {/* Camera Overlay */}
           {capturingCamera && (
             <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-              <div className="bg-white dark:bg-gray-800 rounded-2xl p-4 flex flex-col items-center">
+              <div className="bg-white dark:bg-gray-800 rounded-2xl p-4 flex flex-col items-center w-[90%] sm:w-auto">
                 <video
                   ref={videoRef}
                   autoPlay
-                  className="w-80 h-60 rounded-xl mb-4"
+                  className="w-full sm:w-80 h-48 sm:h-60 rounded-xl mb-4 object-cover"
                 />
-                <div className="flex space-x-4">
+                <div className="flex space-x-3">
                   <button
                     onClick={capturePhoto}
-                    className="bg-orange-500 text-white px-4 py-2 rounded-xl shadow-md"
+                    className="bg-orange-500 text-white px-4 py-2 rounded-xl shadow-md text-sm sm:text-base"
                   >
                     Capture
                   </button>
                   <button
                     onClick={() => setCapturingCamera(false)}
-                    className="bg-gray-300 text-gray-700 px-4 py-2 rounded-xl shadow-md flex items-center"
+                    className="bg-gray-300 text-gray-700 px-4 py-2 rounded-xl shadow-md flex items-center text-sm sm:text-base"
                   >
-                    <X className="w-4 h-4 mr-2" /> Close
+                    <X className="w-4 h-4 sm:w-5 sm:h-5 mr-2" /> Close
                   </button>
                 </div>
               </div>
@@ -225,7 +227,7 @@ export default function ChatPage() {
           )}
 
           {/* Input Area */}
-          <form onSubmit={sendMessage} className="border-t border-gray-200 dark:border-gray-700 p-3 flex items-center space-x-2 relative">
+          <form onSubmit={sendMessage} className="border-t border-gray-200 dark:border-gray-700 p-2 sm:p-3 flex items-center space-x-2 relative">
             <div className="relative">
               <button
                 type="button"
@@ -235,25 +237,25 @@ export default function ChatPage() {
                 <Paperclip className="w-5 h-5 text-gray-600 dark:text-gray-300" />
               </button>
               {showMenu && (
-                <div className="absolute bottom-12 left-0 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-2xl shadow-xl py-2 z-10 w-48">
-                  <label className="flex items-center px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer">
+                <div className="absolute bottom-14 left-0 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-2xl shadow-xl py-2 z-10 w-40 sm:w-48">
+                  <label className="flex items-center px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer text-sm sm:text-base">
                     <Image className="w-5 h-5 mr-2 text-gray-600 dark:text-gray-300" />
                     <input type="file" accept="*/*" onChange={handleFileUpload} className="hidden" />
                     Image/File
                   </label>
-                  <label className="flex items-center px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer">
+                  <label className="flex items-center px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer text-sm sm:text-base">
                     <Video className="w-5 h-5 mr-2 text-gray-600 dark:text-gray-300" />
                     <input type="file" accept="video/*" onChange={handleFileUpload} className="hidden" />
                     Video
                   </label>
-                  <label className="flex items-center px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer">
+                  <label className="flex items-center px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer text-sm sm:text-base">
                     <Mic className="w-5 h-5 mr-2 text-gray-600 dark:text-gray-300" />
                     <input type="file" accept="audio/*" onChange={handleFileUpload} className="hidden" />
                     Audio
                   </label>
                   <button
                     onClick={() => { setCapturingCamera(true); setShowMenu(false); }}
-                    className="flex items-center w-full px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-b-2xl"
+                    className="flex items-center w-full px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-b-2xl text-sm sm:text-base"
                   >
                     <Camera className="w-5 h-5 mr-2 text-gray-600 dark:text-gray-300" />
                     Camera
@@ -265,13 +267,13 @@ export default function ChatPage() {
               type="text"
               value={input}
               onChange={e => setInput(e.target.value)}
-              className="flex-1 border border-gray-300 dark:border-gray-600 rounded-full px-4 py-2 focus:outline-none bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white"
+              className="flex-1 border border-gray-300 dark:border-gray-600 rounded-full px-4 py-2 text-sm sm:text-base focus:outline-none bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white"
               placeholder="Type your message..."
               disabled={isLoading}
             />
             <button
               type="submit"
-              className="bg-orange-500 text-white px-4 py-2 rounded-full shadow-md disabled:opacity-50"
+              className="bg-orange-500 text-white px-3 sm:px-4 py-2 rounded-full shadow-md text-sm sm:text-base disabled:opacity-50"
               disabled={isLoading}
             >
               {isLoading ? "..." : "Send"}
