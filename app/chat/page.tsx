@@ -159,7 +159,7 @@ export default function ChatPage() {
 
       {/* Chat UI */}
       <main className="flex-1 flex items-center justify-center px-4 sm:px-6 py-8">
-        <div className="w-full max-w-lg sm:max-w-2xl mx-auto bg-white dark:bg-gray-800 rounded-2xl shadow-lg shadow-gray-900/5 dark:shadow-gray-900/20 border border-gray-100 dark:border-gray-700 flex flex-col h-[80vh] sm:h-[600px]">
+        <div className="w-full max-w-lg sm:max-w-2xl mx-auto bg-white dark:bg-gray-800 rounded-2xl shadow-lg shadow-gray-900/5 dark:shadow-gray-900/20 border border-gray-100 dark:border-gray-700 flex flex-col h-[80vh] sm:h-[450px]">
           {/* Messages Area */}
           <div className="flex-1 overflow-y-auto p-4 space-y-3 sm:space-y-4" style={{ minHeight: 0 }}>
             {messages.length ? (
