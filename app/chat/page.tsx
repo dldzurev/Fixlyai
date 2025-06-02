@@ -30,25 +30,25 @@ export default function ChatPage() {
     if (capturingCamera) {
       navigator.mediaDevices
         .getUserMedia({ video: true })
-        .then(mediaStream => {
+        .then((mediaStream) => {
           setStream(mediaStream);
           if (videoRef.current) {
             videoRef.current.srcObject = mediaStream;
           }
         })
-        .catch(err => {
+        .catch((err) => {
           console.error("Camera access error:", err);
           setCapturingCamera(false);
         });
     } else {
       if (stream) {
-        stream.getTracks().forEach(track => track.stop());
+        stream.getTracks().forEach((track) => track.stop());
         setStream(null);
       }
     }
     return () => {
       if (stream) {
-        stream.getTracks().forEach(track => track.stop());
+        stream.getTracks().forEach((track) => track.stop());
       }
     };
   }, [capturingCamera]);
@@ -58,7 +58,7 @@ export default function ChatPage() {
     if (!input.trim()) return;
 
     const userMsg: ChatMessage = { role: "user", content: input };
-    setMessages(prev => [...prev, userMsg]);
+    setMessages((prev) => [...prev, userMsg]);
     setInput("");
     setIsLoading(true);
 
@@ -67,16 +67,16 @@ export default function ChatPage() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${process.env.NEXT_PUBLIC_OPENAI_API_KEY}`
+          Authorization: `Bearer ${process.env.NEXT_PUBLIC_OPENAI_API_KEY}`,
         },
         body: JSON.stringify({
           model: "gpt-3.5-turbo",
           messages: [
             { role: "system", content: "You are a helpful AI assistant." },
-            { role: "user", content: input }
+            { role: "user", content: input },
           ],
-          max_tokens: 150
-        })
+          max_tokens: 150,
+        }),
       });
 
       if (!response.ok) throw new Error("Network response was not ok");
@@ -84,11 +84,11 @@ export default function ChatPage() {
       const botReply = data.choices?.[0]?.message?.content;
       const content = botReply || "not connected to API yet";
       const botMsg: ChatMessage = { role: "assistant", content };
-      setMessages(prev => [...prev, botMsg]);
+      setMessages((prev) => [...prev, botMsg]);
     } catch (err) {
       console.error(err);
       const errorMsg: ChatMessage = { role: "assistant", content: "not connected to API yet" };
-      setMessages(prev => [...prev, errorMsg]);
+      setMessages((prev) => [...prev, errorMsg]);
     } finally {
       setIsLoading(false);
       scrollToBottom();
@@ -107,7 +107,7 @@ export default function ChatPage() {
     else fileType = "file";
 
     const fileMsg: ChatMessage = { role: "user", fileUrl, fileType };
-    setMessages(prev => [...prev, fileMsg]);
+    setMessages((prev) => [...prev, fileMsg]);
     setShowMenu(false);
     scrollToBottom();
   };
@@ -120,11 +120,11 @@ export default function ChatPage() {
     canvas.height = video.videoHeight;
     const ctx = canvas.getContext("2d");
     if (ctx) ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-    canvas.toBlob(blob => {
+    canvas.toBlob((blob) => {
       if (blob) {
         const fileUrl = URL.createObjectURL(blob);
         const fileMsg: ChatMessage = { role: "user", fileUrl, fileType: "image" };
-        setMessages(prev => [...prev, fileMsg]);
+        setMessages((prev) => [...prev, fileMsg]);
         scrollToBottom();
       }
     }, "image/png");
@@ -138,17 +138,17 @@ export default function ChatPage() {
         <div className="flex items-center justify-between max-w-3xl mx-auto">
           <Link
             href="/demo"
-            className="inline-flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-orange-600 dark:hover:text-orange-400 transition-colors duration-300"
+            className="inline-flex items-center gap-2 text-white hover:text-white transition-colors duration-300"
           >
-            <ArrowLeft className="w-5 h-5" />
-            <span className="text-sm sm:text-base">Back to Demo</span>
+            <ArrowLeft className="w-5 h-5 text-white" />
+            <span className="text-sm sm:text-base text-white">Back to Demo</span>
           </Link>
 
           <div className="flex items-center gap-2 sm:gap-3">
             <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-orange-400 to-orange-600 rounded-xl flex items-center justify-center">
               <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
             </div>
-            <span className="text-sm sm:text-lg font-semibold text-gray-900 dark:text-white">Chat Assistant</span>
+            <span className="text-sm sm:text-lg font-semibold text-white">Chat Assistant</span>
           </div>
 
           <div className="ml-4">
@@ -168,33 +168,40 @@ export default function ChatPage() {
                   key={idx}
                   className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
                 >
-                  <div
-                    className={`w-auto max-w-[75%] sm:max-w-[70%] p-3 sm:p-4 rounded-2xl shadow-md $
-                      msg.role === "user"
-                        ? "bg-orange-500 text-white"
-                        : "bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                    }`}
-                  >
+                  <div className="w-auto max-w-[75%] sm:max-w-[70%] p-3 sm:p-4 rounded-2xl shadow-md bg-orange-500 text-white">
                     {msg.fileUrl ? (
                       msg.fileType === "image" ? (
-                        <img src={msg.fileUrl} alt="user upload" className="rounded-xl max-h-40 sm:max-h-48 w-full object-cover" />
+                        <img
+                          src={msg.fileUrl}
+                          alt="user upload"
+                          className="rounded-xl max-h-40 sm:max-h-48 w-full object-cover"
+                        />
                       ) : msg.fileType === "video" ? (
-                        <video src={msg.fileUrl} controls className="rounded-xl max-h-40 sm:max-h-48 w-full" />
+                        <video
+                          src={msg.fileUrl}
+                          controls
+                          className="rounded-xl max-h-40 sm:max-h-48 w-full"
+                        />
                       ) : msg.fileType === "audio" ? (
                         <audio src={msg.fileUrl} controls className="w-full" />
                       ) : (
-                        <a href={msg.fileUrl} className="underline text-sm sm:text-base" target="_blank" rel="noreferrer">
+                        <a
+                          href={msg.fileUrl}
+                          className="underline text-sm sm:text-base text-white"
+                          target="_blank"
+                          rel="noreferrer"
+                        >
                           Download File
                         </a>
                       )
                     ) : (
-                      <span className="text-sm sm:text-base">{msg.content}</span>
+                      <span className="text-sm sm:text-base text-white">{msg.content}</span>
                     )}
                   </div>
                 </div>
               ))
             ) : (
-              <p className="text-center text-gray-500 dark:text-gray-400 text-sm sm:text-base">Start the conversation...</p>
+              <p className="text-center text-white text-sm sm:text-base">Start the conversation...</p>
             )}
             <div ref={messagesEndRef} />
           </div>
@@ -219,7 +226,7 @@ export default function ChatPage() {
                     onClick={() => setCapturingCamera(false)}
                     className="bg-gray-300 text-gray-700 px-4 py-2 rounded-xl shadow-md flex items-center text-sm sm:text-base"
                   >
-                    <X className="w-4 h-4 sm:w-5 sm:h-5 mr-2" /> Close
+                    <X className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-white" /> Close
                   </button>
                 </div>
               </div>
@@ -227,37 +234,43 @@ export default function ChatPage() {
           )}
 
           {/* Input Area */}
-          <form onSubmit={sendMessage} className="border-t border-gray-200 dark:border-gray-700 p-2 sm:p-3 flex items-center space-x-2 relative">
+          <form
+            onSubmit={sendMessage}
+            className="border-t border-gray-200 dark:border-gray-700 p-2 sm:p-3 flex items-center space-x-2 relative"
+          >
             <div className="relative">
               <button
                 type="button"
-                onClick={() => setShowMenu(prev => !prev)}
+                onClick={() => setShowMenu((prev) => !prev)}
                 className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
               >
-                <Paperclip className="w-5 h-5 text-gray-600 dark:text-gray-300" />
+                <Paperclip className="w-5 h-5 text-white" />
               </button>
               {showMenu && (
                 <div className="absolute bottom-14 left-0 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-2xl shadow-xl py-2 z-10 w-40 sm:w-48">
-                  <label className="flex items-center px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer text-sm sm:text-base">
-                    <Image className="w-5 h-5 mr-2 text-gray-600 dark:text-gray-300" />
+                  <label className="flex items-center px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer text-sm sm:text-base text-white">
+                    <Image className="w-5 h-5 mr-2 text-white" />
                     <input type="file" accept="*/*" onChange={handleFileUpload} className="hidden" />
                     Image/File
                   </label>
-                  <label className="flex items-center px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer text-sm sm:text-base">
-                    <Video className="w-5 h-5 mr-2 text-gray-600 dark:text-gray-300" />
+                  <label className="flex items-center px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer text-sm sm:text-base text-white">
+                    <Video className="w-5 h-5 mr-2 text-white" />
                     <input type="file" accept="video/*" onChange={handleFileUpload} className="hidden" />
                     Video
                   </label>
-                  <label className="flex items-center px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer text-sm sm:text-base">
-                    <Mic className="w-5 h-5 mr-2 text-gray-600 dark:text-gray-300" />
+                  <label className="flex items-center px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer text-sm sm:text-base text-white">
+                    <Mic className="w-5 h-5 mr-2 text-white" />
                     <input type="file" accept="audio/*" onChange={handleFileUpload} className="hidden" />
                     Audio
                   </label>
                   <button
-                    onClick={() => { setCapturingCamera(true); setShowMenu(false); }}
-                    className="flex items-center w-full px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-b-2xl text-sm sm:text-base"
+                    onClick={() => {
+                      setCapturingCamera(true);
+                      setShowMenu(false);
+                    }}
+                    className="flex items-center w-full px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-b-2xl text-sm sm:text-base text-white"
                   >
-                    <Camera className="w-5 h-5 mr-2 text-gray-600 dark:text-gray-300" />
+                    <Camera className="w-5 h-5 mr-2 text-white" />
                     Camera
                   </button>
                 </div>
@@ -266,8 +279,8 @@ export default function ChatPage() {
             <input
               type="text"
               value={input}
-              onChange={e => setInput(e.target.value)}
-              className="flex-1 border border-gray-300 dark:border-gray-600 rounded-full px-4 py-2 text-sm sm:text-base focus:outline-none bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white"
+              onChange={(e) => setInput(e.target.value)}
+              className="flex-1 border border-gray-300 dark:border-gray-600 rounded-full px-4 py-2 text-sm sm:text-base focus:outline-none bg-gray-50 dark:bg-gray-700 text-white"
               placeholder="Type your message..."
               disabled={isLoading}
             />
