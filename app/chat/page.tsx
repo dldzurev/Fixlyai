@@ -226,7 +226,7 @@ export default function ChatPage() {
                     onClick={() => setCapturingCamera(false)}
                     className="bg-gray-300 text-gray-700 px-4 py-2 rounded-xl shadow-md flex items-center text-sm sm:text-base"
                   >
-                    <X className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-white" /> Close
+                    <X className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-white"  /> Close
                   </button>
                 </div>
               </div>
