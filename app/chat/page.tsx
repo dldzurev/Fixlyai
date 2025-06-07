@@ -233,7 +233,7 @@ export default function ChatPage() {
             </div>
           )}
 
-          {/* Input Area */}
+          {/* Input Area  */}
           <form
             onSubmit={sendMessage}
             className="border-t border-gray-200 dark:border-gray-700 p-2 sm:p-3 flex items-center space-x-2 relative"
