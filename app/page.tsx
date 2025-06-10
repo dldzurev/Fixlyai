@@ -145,7 +145,7 @@ export default function LandingPage() {
               AI-Powered Repair Assistant
             </h2>
             <p className="text-xl text-white font-light max-w-3xl mx-auto leading-relaxed">
-              Fixly.ai revolutionizes how you approach repairs. Our advanced AI understands your problems, provides
+              Fixly.ai revolutionizes how you approach repairs. Our AI understands your problems, provides
               step-by-step guidance, and helps you fix things yourself with confidence.
             </p>
           </div>
