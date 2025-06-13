@@ -142,7 +142,7 @@ export default function LandingPage() {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-              AI-Powered Repair Assistant 
+              AI-Powered Repair Assistant  
             </h2>
             <p className="text-xl text-white font-light max-w-3xl mx-auto leading-relaxed">
               Fixly.ai revolutionizes how you approach repairs. Our AI understands your problems, provides
