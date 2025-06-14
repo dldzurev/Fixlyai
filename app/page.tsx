@@ -146,7 +146,7 @@ export default function LandingPage() {
             </h2>
             <p className="text-xl text-white font-light max-w-3xl mx-auto leading-relaxed">
               Fixly.ai revolutionizes how you approach repairs. Our AI understands your problems, provides
-              step-by-step guidance, and helps you fix things yourself with confidence.
+              step-by-step guidance, and helps you fix things yourself with confidence. 
             </p>
           </div>
 
