@@ -137,7 +137,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* About Section*/ }
+      {/* About Section*/}
       <section className="relative py-20 px-6 bg-gradient-to-b from-transparent to-orange-50/30 dark:to-orange-950/20">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
